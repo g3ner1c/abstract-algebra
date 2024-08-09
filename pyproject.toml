@@ -1,0 +1,18 @@
+[tool.poetry]
+authors = [
+    "Sky \"g3ner1c\" Hong <g3ner1c-sky@pm.me>",
+    "Naftali Harris <naftali@stanford.edu>",
+]
+name = "abstracta"
+version = "0.1.0"
+description = "abstract algebra in python"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
