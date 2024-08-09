@@ -1,6 +1,7 @@
 import unittest
-from absalg.Set import Set
-from absalg.Function import *
+from abstracta.Set import Set
+from abstracta.Function import *
+
 
 class test_function(unittest.TestCase):
     def test_basics(self):
@@ -63,6 +64,7 @@ class test_function(unittest.TestCase):
         str(ID)
         for item in s:
             self.assertEquals(ID(item), item)
+
 
 if __name__ == "__main__":
     unittest.main()

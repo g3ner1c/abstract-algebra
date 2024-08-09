@@ -1,21 +1,26 @@
 import unittest
 from math import factorial
-from absalg.Group import *
+from abstracta.Group import *
+
 
 class test_group(unittest.TestCase):
     def test_Zn(self):
         for n in range(1, 10):
             Z = Zn(n)
             str(Z)
-            self.assertEquals(Z.e, GroupElem(0,Z))
+            self.assertEquals(Z.e, GroupElem(0, Z))
             self.assertEquals(len(Z), n)
-            self.assertTrue(all(a * b == GroupElem((a.elem + b.elem) % n, Z) for a in Z for b in Z))
-            self.assertTrue(all(Z.inverse(a) == GroupElem((n - a.elem) % n, Z) for a in Z))
+            self.assertTrue(
+                all(a * b == GroupElem((a.elem + b.elem) % n, Z) for a in Z for b in Z)
+            )
+            self.assertTrue(
+                all(Z.inverse(a) == GroupElem((n - a.elem) % n, Z) for a in Z)
+            )
             self.assertTrue(Z.is_abelian())
             self.assertTrue(Z <= Z)
             self.assertTrue(Z.is_normal_subgroup(Z))
-            self.assertEquals(len(Z/Z), 1)
-            if n <= 5: # takes a while
+            self.assertEquals(len(Z / Z), 1)
+            if n <= 5:  # takes a while
                 self.assertEquals(len(Z * Z), n * n)
             self.assertEquals(Z.generate(Z), Z)
 
@@ -25,19 +30,27 @@ class test_group(unittest.TestCase):
             str(S)
             self.assertEquals(S.e, GroupElem(tuple(xrange(n)), S))
             self.assertEquals(len(S), factorial(n))
-            self.assertTrue(all(S.inverse(a) == GroupElem( \
-                            tuple(dict((a.elem[j], j) for j in a.elem)[i] \
-                                  for i in range(n)), S) \
-                            for a in S))
+            self.assertTrue(
+                all(
+                    S.inverse(a)
+                    == GroupElem(
+                        tuple(
+                            dict((a.elem[j], j) for j in a.elem)[i] for i in range(n)
+                        ),
+                        S,
+                    )
+                    for a in S
+                )
+            )
             if n <= 2:
                 self.assertTrue(S.is_abelian())
             else:
                 self.assertFalse(S.is_abelian())
             self.assertTrue(S <= S)
             self.assertTrue(S.is_normal_subgroup(S))
-            self.assertEquals(len(S/S), 1)
+            self.assertEquals(len(S / S), 1)
             if n <= 3:
-                self.assertEquals(len(S * S), factorial(n)**2)
+                self.assertEquals(len(S * S), factorial(n) ** 2)
             self.assertEquals(S.generate(S), S)
 
     def test_subgroups(self):
@@ -78,14 +91,14 @@ class test_group(unittest.TestCase):
             self.assertEquals(g + e, g)
             self.assertEquals(g * g, e)
             self.assertEquals(g + g, e)
-            self.assertEquals(g ** -1, g)
+            self.assertEquals(g**-1, g)
             self.assertEquals(-g, g)
-            self.assertEquals(-g, g ** -1)
-            self.assertEquals(g ** 209325, g)
-            self.assertEquals(g ** -23234, e)
+            self.assertEquals(-g, g**-1)
+            self.assertEquals(g**209325, g)
+            self.assertEquals(g**-23234, e)
             for n in range(-10, 10):
-                self.assertEquals(g * n, g ** n)
-                self.assertEquals(n * g, g ** n)
+                self.assertEquals(g * n, g**n)
+                self.assertEquals(n * g, g**n)
                 self.assertEquals(n * g, g * n)
         for g in [a, b, c]:
             self.assertTrue(e != g)
@@ -102,15 +115,26 @@ class test_group(unittest.TestCase):
                 -g
         for H in G.subgroups():
             for g in G:
-                self.assertEquals(g ** 5, g * g * g * g * g)
+                self.assertEquals(g**5, g * g * g * g * g)
                 for h in H:
-                    self.assertEquals(h ** 2, h * h)
+                    self.assertEquals(h**2, h * h)
                     self.assertEquals(h * g, GroupElem(h.elem, G) * g)
                     self.assertEquals(g * h, g * GroupElem(h.elem, G))
 
     def test_generators(self):
-        for G in [Zn(1), Zn(2), Zn(5), Zn(8), Sn(1), Sn(2), Sn(3), \
-                  Dn(1), Dn(2), Dn(3), Dn(4)]:
+        for G in [
+            Zn(1),
+            Zn(2),
+            Zn(5),
+            Zn(8),
+            Sn(1),
+            Sn(2),
+            Sn(3),
+            Dn(1),
+            Dn(2),
+            Dn(3),
+            Dn(4),
+        ]:
             self.assertEquals(G, G.generate(G.generators()))
             self.assertEquals(G, G.generate(g.elem for g in G.generators()))
 

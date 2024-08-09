@@ -4,8 +4,10 @@ Definition of a function
 
 from Set import Set
 
+
 class Function:
     """Definition of a finite function"""
+
     def __init__(self, domain, codomain, function):
         """
         Initialize the function and check that it is well-formed.
@@ -35,12 +37,12 @@ class Function:
         # Need to be a little careful, since self.domain and self.codomain are
         # often the same, and we don't want to cancel out their hashes by xoring
         # them against each other.
-        # 
-        # Also, functions we consider equal, like lambda x: x + 1, and 
-        # def jim(x): return x + 1, have different hashes, so we can't include 
+        #
+        # Also, functions we consider equal, like lambda x: x + 1, and
+        # def jim(x): return x + 1, have different hashes, so we can't include
         # the hash of self.function.
         #
-        # Finally, we should make sure that if you switch the domain and 
+        # Finally, we should make sure that if you switch the domain and
         # codomain, the hash will (usually) change, so you can't just add or
         # multiply the hashes together.
 
@@ -50,10 +52,11 @@ class Function:
         if not isinstance(other, Function):
             return False
 
-        return id(self) == id(other) or ( \
-               self.domain == other.domain and \
-               self.codomain == other.codomain and \
-               all(self(elem) == other(elem) for elem in self.domain) )
+        return id(self) == id(other) or (
+            self.domain == other.domain
+            and self.codomain == other.codomain
+            and all(self(elem) == other(elem) for elem in self.domain)
+        )
 
     def __ne__(self, other):
         return not self == other
@@ -79,8 +82,9 @@ class Function:
         formatstr2 = "{0:<%d}{1}\n" % (maxlen + 4)
         nothit = self.codomain - self._image()
 
-        return("".join(formatstr1.format(x, self(x)) for x in self.domain) + \
-               "".join(formatstr2.format("", y) for y in nothit))
+        return "".join(formatstr1.format(x, self(x)) for x in self.domain) + "".join(
+            formatstr2.format("", y) for y in nothit
+        )
 
     def is_surjective(self):
         # Need to make self.domain into a Set, since it might not be in
@@ -101,6 +105,7 @@ class Function:
 
     def new_domains(self, domain, codomain):
         return Function(domain, codomain, self.function)
+
 
 def identity(s):
     """Returns the identity function on the set s"""
