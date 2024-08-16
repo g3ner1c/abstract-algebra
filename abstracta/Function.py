@@ -2,29 +2,33 @@
 Definition of a function
 """
 
-from Set import Set
+from __future__ import annotations
+
+from typing import Callable, Self
+
+from abstracta.Set import AlgSet
 
 
 class Function:
     """Definition of a finite function"""
 
-    def __init__(self, domain, codomain, function):
+    def __init__(self, domain: AlgSet, codomain: AlgSet, function: Callable):
         """
         Initialize the function and check that it is well-formed.
 
         This method can be overwritten by subclasses of Function, so that for
         example GroupHomomorphisms can be between Groups, rather than Sets.
         """
-        if not isinstance(domain, Set):
+        if not isinstance(domain, AlgSet):
             raise TypeError("Domain must be a Set")
-        if not isinstance(codomain, Set):
+        if not isinstance(codomain, AlgSet):
             raise TypeError("Codomain must be a Set")
         if not all(function(elem) in codomain for elem in domain):
             raise TypeError("Function returns some value outside of codomain")
 
-        self.domain = domain
-        self.codomain = codomain
-        self.function = function
+        self.domain: AlgSet = domain
+        self.codomain: AlgSet = codomain
+        self.function: Callable = function
 
     def __call__(self, elem):
         if elem not in self.domain:
@@ -48,7 +52,7 @@ class Function:
 
         return hash(self.domain) + 2 * hash(self.codomain)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Function):
             return False
 
@@ -58,12 +62,12 @@ class Function:
             and all(self(elem) == other(elem) for elem in self.domain)
         )
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self == other
 
-    def _image(self):
+    def _image(self) -> AlgSet:
         """The literal image of the function"""
-        return Set(self(elem) for elem in self.domain)
+        return AlgSet(self(elem) for elem in self.domain)
 
     def image(self):
         """
@@ -73,7 +77,7 @@ class Function:
         """
         return self._image()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Pretty outputing of functions"""
 
         # Figure out formatting
@@ -86,18 +90,18 @@ class Function:
             formatstr2.format("", y) for y in nothit
         )
 
-    def is_surjective(self):
+    def is_surjective(self) -> bool:
         # Need to make self.domain into a Set, since it might not be in
         # subclasses of Function
-        return self._image() == Set(self.codomain)
+        return self._image() == AlgSet(self.codomain)
 
-    def is_injective(self):
+    def is_injective(self) -> bool:
         return len(self._image()) == len(self.domain)
 
-    def is_bijective(self):
+    def is_bijective(self) -> bool:
         return self.is_surjective() and self.is_injective()
 
-    def compose(self, other):
+    def compose(self, other) -> Function:
         """Returns x -> self(other(x))"""
         if not self.domain == other.codomain:
             raise ValueError("codomain of other must match domain of self")
@@ -109,6 +113,6 @@ class Function:
 
 def identity(s):
     """Returns the identity function on the set s"""
-    if not isinstance(s, Set):
+    if not isinstance(s, AlgSet):
         raise TypeError("s must be a set")
     return Function(s, s, lambda x: x)
